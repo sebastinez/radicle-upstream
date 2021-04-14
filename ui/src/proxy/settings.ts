@@ -27,6 +27,7 @@ export enum Theme {
   Dark = "dark",
   Light = "light",
   H4x0r = "h4x0r",
+  Zenburn = "zenburn",
 }
 
 export enum UIFont {
@@ -45,7 +46,7 @@ export const settingsSchema: zod.ZodSchema<Settings> = zod.object({
     hints: zod.object({
       showRemoteHelper: zod.boolean(),
     }),
-    theme: zod.enum([Theme.Dark, Theme.Light, Theme.H4x0r]),
+    theme: zod.enum([Theme.Dark, Theme.Light, Theme.H4x0r, Theme.Zenburn]),
     uiFont: zod.enum([UIFont.Inter, UIFont.System]),
   }),
   coco: zod.object({

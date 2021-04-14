@@ -48,6 +48,10 @@ export const themeOptions: Option<string>[] = [
     title: "H4x0r",
     value: Theme.H4x0r,
   },
+  {
+    title: "Zenburn",
+    value: Theme.Zenburn,
+  },
 ];
 
 export const uiFontOptions: Option<string>[] = [

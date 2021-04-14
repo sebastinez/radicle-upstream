@@ -131,6 +131,7 @@ mod handler {
                 settings::Theme::Dark => "base16-ocean.dark",
                 settings::Theme::Light => "base16-ocean.light",
                 settings::Theme::H4x0r => "base16-ocean.h4x0r",
+                settings::Theme::Zenburn => "base16-ocean.zenburn",
             })
         } else {
             None

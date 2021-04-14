@@ -27,6 +27,11 @@ context("settings", () => {
       cy.get("[data-theme='h4x0r']").should("exist");
     });
 
+    it("can be switched to zenburn", () => {
+      cy.get("button[value='zenburn']").click();
+      cy.get("[data-theme='zenburn']").should("exist");
+    });
+
     it("is persisted across app start", () => {
       cy.get("button[value='light']").click();
       cy.get("[data-theme='light']").should("exist");

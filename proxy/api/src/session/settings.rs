@@ -37,6 +37,8 @@ pub enum Theme {
     Light,
     /// A h4x0r theme.
     H4x0r,
+    /// A zenburn theme.
+    Zenburn,
 }
 
 impl Default for Theme {
