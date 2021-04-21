@@ -2,6 +2,8 @@ import path from "path";
 import sveltePreprocess from "svelte-preprocess";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const WarningsToErrorsPlugin = require("warnings-to-errors-webpack-plugin");
 
 interface Argv {
   mode?: "production" | "development";
@@ -39,6 +41,7 @@ function electronMain(_env: unknown, argv: Argv): webpack.Configuration {
     resolve: {
       extensions: [".ts", ".js"],
     },
+    plugins: defaultPlugins(),
     output: {
       filename: "bundle.js",
       path: path.resolve(__dirname, "native"),
@@ -91,6 +94,7 @@ function ui(_env: unknown, argv: Argv): webpack.Configuration {
       path: path.resolve(__dirname, "public"),
     },
     plugins: [
+      ...defaultPlugins(),
       new webpack.ProvidePlugin({
         Buffer: ["buffer", "Buffer"],
         process: "process",
@@ -108,6 +112,14 @@ function ui(_env: unknown, argv: Argv): webpack.Configuration {
       }),
     ],
   };
+}
+
+function defaultPlugins(): webpack.WebpackPluginInstance[] {
+  if (process.env.CI === "true") {
+    return [new WarningsToErrorsPlugin()];
+  } else {
+    return [];
+  }
 }
 
 export default [ui, electronMain];

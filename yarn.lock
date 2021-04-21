@@ -10787,6 +10787,7 @@ __metadata:
     uuid: ^8.3.2
     validate.js: ^0.13.1
     wait-on: ^5.3.0
+    warnings-to-errors-webpack-plugin: ^2.0.1
     webpack: ^5.33.2
     webpack-cli: ^4.6.0
     zod: ^1.11.13
@@ -13509,6 +13510,15 @@ __metadata:
   dependencies:
     makeerror: 1.0.x
   checksum: c014f264c473fc4464ba8f59eb9f7ffa1c0cf2c83b65353de28a6012d8dd29e974bf2b0fbd5c71231f56762a3ea0d970b635f7d6f6d670ff83f426741ce6a4da
+  languageName: node
+  linkType: hard
+
+"warnings-to-errors-webpack-plugin@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "warnings-to-errors-webpack-plugin@npm:2.0.1"
+  peerDependencies:
+    webpack: ^2.2.0-rc || ^3 || ^4 || ^5
+  checksum: 2bee544c7d2cc5190e32bdd2d7518e0f3043b13d983d6228d141c6174591acb2b57b7e0e805c24f5deeec51e9d3a81a9eab425a53e51760d0088f634d2c337f1
   languageName: node
   linkType: hard
 
