@@ -23,7 +23,7 @@ type AuthToken = string;
 
 const ROOT_PATH = path.join(__dirname, "../../../");
 
-const PROXY_BINARY_PATH = path.join(ROOT_PATH, "target/release/radicle-proxy");
+const PROXY_BINARY_PATH = path.join(ROOT_PATH, "target/debug/radicle-proxy");
 
 // IP to which all started processes will bind to.
 const HOST = "127.0.0.1";
@@ -138,6 +138,7 @@ class Node {
         "--peer-listen",
         `${HOST}:${this.peerPort}`,
         "--skip-remote-helper-install",
+        "--unsafe-fast-keystore",
       ],
       { env: { ...global.process.env, RAD_HOME: this.radHome } }
     );
@@ -159,7 +160,10 @@ class Node {
 
     this.state = { ...this.state, kind: StateKind.Started, process: process };
 
-    await waitOn({ resources: [`tcp:${HOST}:${this.httpPort}`] });
+    await waitOn({
+      resources: [`tcp:${HOST}:${this.httpPort}`],
+      timeout: 5000,
+    });
 
     this.logger.log("node started successfully");
   }

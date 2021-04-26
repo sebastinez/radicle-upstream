@@ -2,7 +2,8 @@
 
 use std::io;
 
-use radicle_daemon::{keystore, peer, request, state, Urn};
+use crate::keystore;
+use radicle_daemon::{peer, request, state, Urn};
 
 /// All error variants the API will return.
 #[derive(Debug, thiserror::Error)]

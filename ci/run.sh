@@ -60,7 +60,8 @@ time cargo fmt --all -- --check
 log-group-end
 
 log-group-start "Run proxy lints"
-time cargo clippy --all --all-features --all-targets -Z unstable-options -- --deny warnings
+time cargo clippy --all --all-targets -- --deny warnings
+time cargo clippy --all --all-targets --all-features -- --deny warnings
 log-group-end
 
 log-group-start "Run app eslint checks"
@@ -79,7 +80,6 @@ log-group-start "Run proxy tests"
 (
   export RUST_TEST_TIME_UNIT=2000,4000
   export RUST_TEST_TIME_INTEGRATION=2000,8000
-  cargo build --tests --all --all-features --all-targets
   timeout 6m cargo test --all --all-features --all-targets -- -Z unstable-options --report-time
 )
 log-group-end

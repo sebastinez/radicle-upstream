@@ -48,7 +48,7 @@ export const withTempDir = (callback: (tempDirPath: string) => void): void => {
       }),
     });
     callback(path);
-    cy.exec(`rm -r "${path}"`);
+    // cy.exec(`rm -r "${path}"`);
   });
 };
 
