@@ -13,7 +13,7 @@
   import { CSSPosition } from "../src/style";
   import type { Urn } from "../src/urn";
   import ProfileScreen from "ui/Screen/Profile.svelte";
-  import UserProfileScreen from "ui/Screen/UserProfile.svelte";
+  /* import UserProfileScreen from "ui/Screen/UserProfile.svelte"; */
   import ProjectScreen from "ui/Screen/Project.svelte";
   import CodeTab from "ui/Screen/Project/Source/Code.svelte";
 
@@ -43,8 +43,9 @@
       push({ component: ProfileScreen, props: {} });
     } else {
       push({
-        component: UserProfileScreen,
-        props: { urn: peer.identity.urn },
+        type: "userProfile",
+        urn: peer.identity.urn,
+        activeTab: "projects",
       });
     }
   };

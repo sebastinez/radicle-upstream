@@ -15,7 +15,15 @@
   import ProjectsTab from "ui/Screen/UserProfile/Projects.svelte";
 
   export let urn: string;
+  // TODO Remove `activeTab` prop and use wire up `activeTabString`
   export let activeTab: typeof SvelteComponent = ProjectsTab;
+  export let activeTabString: "projects" | "profile";
+
+  $: {
+    if (activeTabString === "projects") {
+      activeTab = ProjectsTab;
+    }
+  }
 
   const topbarMenuItems = [
     {

@@ -3,14 +3,18 @@ import * as svelteStore from "svelte/store";
 
 export { default as Router } from "ui/src/router/Router.svelte";
 
-export type State = {
-  component: typeof SvelteComponent | null;
-  // any object | empty object
-  props: Record<string, unknown> | Record<string, never>;
-};
+export type State =
+  // TODO remove this case
+  | {
+      component: typeof SvelteComponent | null;
+      // any object | empty object
+      props: Record<string, unknown> | Record<string, never>;
+    }
+  // TODO add the other screens here
+  | { type: "userProfile"; urn: string; activeTab: "projects" | "profile" };
 
 const writableHistory: svelteStore.Writable<State[]> = svelteStore.writable([]);
-const emptyState = { component: null, props: {} };
+const emptyState: State = { component: null, props: {} };
 
 export const push = (newState: State): void => {
   const oldHistory = svelteStore.get(writableHistory);
