@@ -110,13 +110,9 @@ export const getOrgs = async (walletOwnerAddress: string): Promise<Org[]> => {
   return orgs;
 };
 
-interface Member {
-  id: string;
-}
-
 export interface MemberResponse {
   threshold: number;
-  members: Member[];
+  members: string[];
 }
 
 export const getGnosisSafeMembers = async (

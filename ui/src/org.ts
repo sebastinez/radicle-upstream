@@ -7,6 +7,8 @@ import { push } from "svelte-spa-router";
 
 import * as notification from "./notification";
 import * as path from "./path";
+import * as proxy from "./proxy";
+import type * as identity from "./proxy/identity";
 import * as wallet from "./wallet";
 import * as theGraphApi from "./theGraphApi";
 import * as ethereum from "ui/src/ethereum";
@@ -14,6 +16,8 @@ import * as error from "ui/src/error";
 import * as proxy from "ui/src/proxy";
 import * as urn from "ui/src/urn";
 import type * as project from "ui/src/proxy/project";
+import { claimsAddress, ClaimsContract } from "./attestation/contract";
+import { identitySha1Urn } from "ui/src/urn";
 
 import type {
   TransactionReceipt,
@@ -219,18 +223,44 @@ export const fetchOrgs = async (): Promise<void> => {
   orgSidebarStore.set(orgs);
 };
 
-interface OrgMemberTabStore extends theGraphApi.MemberResponse {
+interface OrgMemberTabStore {
   gnosisSafeAddress: string;
+  threshold: number;
+  members: Member[];
+}
+
+interface Member {
+  ethereumAddress: string;
+  identity: identity.Identity | undefined;
 }
 
 export const orgMemberTabStore =
   svelteStore.writable<OrgMemberTabStore | null>(null);
 
 export const fetchMembers = async (
+  walletStore: svelteStore.Readable<wallet.Wallet>,
   gnosisSafeAddress: string
 ): Promise<void> => {
   const response = await theGraphApi.getGnosisSafeMembers(gnosisSafeAddress);
-  orgMemberTabStore.set({ gnosisSafeAddress, ...response });
+
+  const wallet = svelteStore.get(walletStore);
+  const contract = new ClaimsContract(
+    wallet.signer,
+    claimsAddress(wallet.environment)
+  );
+
+  const members = await Promise.all(
+    response.members.map(async ethereumAddress => {
+      const identity = await getClaimedIdentity(contract, ethereumAddress);
+      return { ethereumAddress, identity };
+    })
+  );
+
+  orgMemberTabStore.set({
+    gnosisSafeAddress,
+    threshold: response.threshold,
+    members,
+  });
 };
 
 interface OrgProjectTabStore {
@@ -266,3 +296,26 @@ export const resolveProjectAnchors = async (
 
   orgProjectTabStore.set({ anchoredProjects, unresolvedAnchors });
 };
+
+async function getClaimedIdentity(
+  contract: ClaimsContract,
+  address: string
+): Promise<identity.Identity | undefined> {
+  const radicleIdBytes = await contract.getClaimed(address);
+  if (!radicleIdBytes) {
+    return undefined;
+  }
+  const urn = identitySha1Urn(radicleIdBytes);
+  let identity;
+  try {
+    identity = await proxy.client.identityGet(urn);
+  } catch {
+    return undefined;
+  }
+  // Assert that the identity claims the ethereum address
+  const claimed = identity.metadata.ethereum?.address.toLowerCase();
+  if (claimed !== address.toLowerCase()) {
+    return undefined;
+  }
+  return identity;
+}

@@ -1,9 +1,8 @@
 <script>
   import { orgMemberTabStore } from "ui/src/org";
-  import { ellipsed } from "ui/src/style";
 
-  import { Icon } from "ui/DesignSystem/Primitive";
-  import { List } from "ui/DesignSystem/Component";
+  import { Avatar, Icon } from "ui/DesignSystem/Primitive";
+  import { List, StyledCopyable, PeerId } from "ui/DesignSystem/Component";
 
   // TODO(rudolfs): make the link go to
   // `https://gnosis-safe.io/app/#/safes/${$orgMemberTabStore.gnosisSafeAddress}` for
@@ -21,7 +20,7 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    padding: 1.375rem 1.5rem;
+    padding: 1rem;
     align-items: center;
     min-width: 0;
   }
@@ -58,12 +57,12 @@
     color: var(--color-foreground-level-6);
   }
 
-  .member-name {
-    color: var(--color-foreground-level-6);
-  }
-
-  .member-address {
-    color: var(--color-foreground-level-5);
+  .member-details {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: -webkit-fill-available;
+    min-width: 0;
   }
 </style>
 
@@ -89,8 +88,42 @@
     let:item={member}
     styleHoverState={false}>
     <div class="list-item">
-      <div class="member-name typo-text-bold">{member}</div>
-      <div class="member-address">{ellipsed(member)}</div>
+      {#if member.identity}
+        <div style="display: flex">
+          <Avatar
+            style="margin-right: 32px"
+            size="big"
+            variant="circle"
+            avatarFallback={member.identity.avatarFallback} />
+          <div class="member-details">
+            <h2
+              data-cy="entity-name"
+              class="typo-overflow-ellipsis"
+              title={member.identity.metadata.handle}>
+              {member.identity.metadata.handle}
+            </h2>
+            <PeerId
+              truncate
+              peerId={member.identity.peerId}
+              style="margin-top: 0.5rem;" />
+          </div>
+        </div>
+      {:else}
+        <Avatar
+          style="margin-right: 32px"
+          size="big"
+          variant="circle"
+          avatarFallback={{ background: { r: 0, g: 0, b: 0 }, emoji: "❔" }} />
+        <div class="member-details">
+          <h2
+            data-cy="entity-name"
+            class="typo-overflow-ellipsis"
+            title="Unknown identity">
+            Unknown identity
+          </h2>
+        </div>
+      {/if}
+      <StyledCopyable truncate value={member.ethereumAddress} />
     </div>
   </List>
 </div>

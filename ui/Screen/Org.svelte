@@ -5,6 +5,7 @@
   import { orgScreenStore } from "ui/src/org";
   import * as org from "ui/src/org";
   import * as path from "ui/src/path";
+  import { store } from "ui/src/wallet";
 
   import { Icon } from "ui/DesignSystem/Primitive";
   import {
@@ -30,7 +31,7 @@
       async () => {
         try {
           if ($orgScreenStore) {
-            await org.fetchMembers($orgScreenStore.gnosisSafeAddress);
+            await org.fetchMembers(store, $orgScreenStore.gnosisSafeAddress);
             return true;
           } else {
             return false;
