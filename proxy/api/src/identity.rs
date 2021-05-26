@@ -10,7 +10,7 @@ use radicle_daemon::{
     identities::payload::{self, ExtError, PersonPayload},
     net,
     signer::BoxedSigner,
-    state, PeerId, Person, Urn,
+    state, PeerId, Person as DaemonPerson, Urn,
 };
 
 use crate::{
@@ -37,8 +37,8 @@ pub struct Identity {
     pub avatar_fallback: avatar::Avatar,
 }
 
-impl From<(PeerId, Person)> for Identity {
-    fn from((peer_id, user): (PeerId, Person)) -> Self {
+impl From<(PeerId, DaemonPerson)> for Identity {
+    fn from((peer_id, user): (PeerId, DaemonPerson)) -> Self {
         let urn = user.urn();
         let handle = user.subject().name.to_string();
         let ethereum = match user.payload().get_ext::<EthereumClaimExtV1>() {
@@ -56,6 +56,35 @@ impl From<(PeerId, Person)> for Identity {
                 handle: handle.clone(),
                 peer_id,
             },
+            metadata: Metadata { handle, ethereum },
+            avatar_fallback: avatar::Avatar::from(&urn.to_string(), avatar::Usage::Identity),
+        }
+    }
+}
+
+/// A person in the monorepo
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Person {
+    pub urn: Urn,
+    pub metadata: Metadata,
+    pub avatar_fallback: avatar::Avatar,
+}
+
+impl From<DaemonPerson> for Person {
+    fn from(person: DaemonPerson) -> Self {
+        let urn = person.urn();
+        let handle = person.subject().name.to_string();
+        let ethereum = match person.payload().get_ext::<EthereumClaimExtV1>() {
+            Ok(ext_opt) => ext_opt.map(Ethereum::from),
+            Err(err) => {
+                log::warn!("Ethereum claim of user {} is malformed: {}", urn, err);
+                // Ignore the malformed extension payload, the identity itself is still valid
+                None
+            },
+        };
+        Self {
+            urn: urn.clone(),
             metadata: Metadata { handle, ethereum },
             avatar_fallback: avatar::Avatar::from(&urn.to_string(), avatar::Usage::Identity),
         }
@@ -174,4 +203,17 @@ pub async fn get(
         )),
         None => Ok(None),
     }
+}
+
+pub async fn get_other(
+    peer: &net::peer::Peer<BoxedSigner>,
+    id: Urn,
+) -> Result<Option<Person>, error::Error> {
+    match state::list_users(peer)
+        .await
+        .map(|users| users.into_iter().find(|u| u.urn() == id))
+        .map_err(error::Error::State)? {
+            Some(identity) => Ok(Some(identity.into())),
+            None => Ok(None)
+        }
 }

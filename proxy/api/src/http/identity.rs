@@ -10,7 +10,8 @@ use crate::{context, http};
 pub fn filters(ctx: context::Context) -> BoxedFilter<(impl Reply,)> {
     get_filter(ctx.clone())
         .or(create_filter(ctx.clone()))
-        .or(update_filter(ctx))
+        .or(update_filter(ctx.clone()))
+        .or(get_other_filter(ctx))
         .boxed()
 }
 
@@ -45,6 +46,18 @@ fn get_filter(
         .and(warp::get())
         .and(http::with_context_unsealed(ctx))
         .and_then(handler::get)
+}
+
+/// `GET /other/<id>`
+fn get_other_filter(
+    ctx: context::Context
+) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    path::param::<Urn>()
+        .and(path::param::<Urn>())
+        .and(path("peers"))
+        .and(warp::path::end())
+        .and(http::with_context_unsealed(ctx))
+        .and_then(handler::get_other)
 }
 
 /// Identity handlers for conversion between core domain and http request fullfilment.
@@ -89,6 +102,12 @@ mod handler {
     pub async fn get(id: Urn, ctx: context::Unsealed) -> Result<impl Reply, Rejection> {
         let id = identity::get(&ctx.peer, id.clone()).await?;
         Ok(reply::json(&id))
+    }
+
+    /// Get the [`Person`] for the given `id`.
+    pub async fn get_other(_self_id: Urn, id: Urn, ctx: context::Unsealed) -> Result<impl Reply, Rejection> {
+        let person = identity::get_other(&ctx.peer, id.clone()).await?;
+        Ok(reply::json(&person))
     }
 }
 
