@@ -46,7 +46,7 @@ struct Rigging {
     /// The context provided to the API
     ctx: context::Context,
     /// The [`Peer`] to run
-    peer: Option<Peer<radicle_daemon::config::StreamDiscovery>>,
+    peer: Option<Peer<signer::BoxedSigner, radicle_daemon::config::StreamDiscovery>>,
     /// Channel to receive updates to the seed nodes from the API
     seeds_sender: Option<watch::Sender<Vec<seed::Seed>>>,
 }
