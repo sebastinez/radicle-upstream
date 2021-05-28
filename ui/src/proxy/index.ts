@@ -95,6 +95,20 @@ export class Client {
     );
   }
 
+  async remoteIdentityGet(
+    urn: string,
+    options?: RequestOptions
+  ): Promise<identity.Identity> {
+    return this.fetcher.fetchOk(
+      {
+        method: "GET",
+        path: `identities/remote/${urn}`,
+        options,
+      },
+      identity.remoteIdentitySchema
+    );
+  }
+
   async identityUpdate(
     params: identity.Metadata,
     options?: RequestOptions

@@ -39,9 +39,38 @@ pub struct Identity {
 
 impl From<(PeerId, Person)> for Identity {
     fn from((peer_id, user): (PeerId, Person)) -> Self {
-        let urn = user.urn();
-        let handle = user.subject().name.to_string();
-        let ethereum = match user.payload().get_ext::<EthereumClaimExtV1>() {
+        let identity = RemoteIdentity::from(user);
+        let shareable_entity_identifier = Identifier {
+            handle: identity.metadata.handle.clone(),
+            peer_id,
+        };
+        Self {
+            peer_id,
+            urn: identity.urn,
+            shareable_entity_identifier,
+            metadata: identity.metadata,
+            avatar_fallback: identity.avatar_fallback,
+        }
+    }
+}
+
+/// The remote users personal identifying metadata and keys.
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RemoteIdentity {
+    /// The coco URN.
+    pub urn: Urn,
+    /// Bundle of user provided data.
+    pub metadata: Metadata,
+    /// Generated fallback avatar to be used if actual avatar url is missing or can't be loaded.
+    pub avatar_fallback: avatar::Avatar,
+}
+
+impl From<Person> for RemoteIdentity {
+    fn from(person: Person) -> Self {
+        let urn = person.urn();
+        let handle = person.subject().name.to_string();
+        let ethereum = match person.payload().get_ext::<EthereumClaimExtV1>() {
             Ok(ext_opt) => ext_opt.map(Ethereum::from),
             Err(err) => {
                 log::warn!("Ethereum claim of user {} is malformed: {}", urn, err);
@@ -50,14 +79,9 @@ impl From<(PeerId, Person)> for Identity {
             },
         };
         Self {
-            peer_id,
-            urn: urn.clone(),
-            shareable_entity_identifier: Identifier {
-                handle: handle.clone(),
-                peer_id,
-            },
-            metadata: Metadata { handle, ethereum },
             avatar_fallback: avatar::Avatar::from(&urn.to_string(), avatar::Usage::Identity),
+            urn,
+            metadata: Metadata { handle, ethereum },
         }
     }
 }
@@ -174,4 +198,18 @@ pub async fn get(
         )),
         None => Ok(None),
     }
+}
+
+/// Retrieve an identity by id.
+///
+/// # Errors
+///
+/// Errors if access to coco state on the filesystem fails, or the id is malformed.
+pub async fn get_remote(
+    peer: &net::peer::Peer<BoxedSigner>,
+    id: Urn,
+) -> Result<Option<RemoteIdentity>, error::Error> {
+    let all_users = state::list_users(peer).await.map_err(error::Error::State)?;
+    let user = all_users.into_iter().find(|user| user.urn() == id);
+    Ok(user.map(RemoteIdentity::from))
 }

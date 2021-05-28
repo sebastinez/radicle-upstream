@@ -231,7 +231,7 @@ interface OrgMemberTabStore {
 
 interface Member {
   ethereumAddress: string;
-  identity: identity.Identity | undefined;
+  identity: identity.RemoteIdentity | undefined;
 }
 
 export const orgMemberTabStore =
@@ -300,7 +300,7 @@ export const resolveProjectAnchors = async (
 async function getClaimedIdentity(
   contract: ClaimsContract,
   address: string
-): Promise<identity.Identity | undefined> {
+): Promise<identity.RemoteIdentity | undefined> {
   const radicleIdBytes = await contract.getClaimed(address);
   if (!radicleIdBytes) {
     return undefined;
@@ -308,7 +308,7 @@ async function getClaimedIdentity(
   const urn = identitySha1Urn(radicleIdBytes);
   let identity;
   try {
-    identity = await proxy.client.identityGet(urn);
+    identity = await proxy.client.remoteIdentityGet(urn);
   } catch {
     return undefined;
   }
