@@ -98,7 +98,7 @@ export class Client {
   async remoteIdentityGet(
     urn: string,
     options?: RequestOptions
-  ): Promise<identity.Identity> {
+  ): Promise<identity.RemoteIdentity> {
     return this.fetcher.fetchOk(
       {
         method: "GET",

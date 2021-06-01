@@ -68,6 +68,7 @@ pub struct RemoteIdentity {
 
 impl From<Person> for RemoteIdentity {
     fn from(person: Person) -> Self {
+        println!("GETTING IDENTITY:\n{:#?}", person);
         let urn = person.urn();
         let handle = person.subject().name.to_string();
         let ethereum = match person.payload().get_ext::<EthereumClaimExtV1>() {
@@ -187,7 +188,7 @@ pub async fn update(
 ///
 /// # Errors
 ///
-/// Errors if access to coco state on the filesystem fails, or the id is malformed.
+/// Errors if access to coco state on the filesystem fa/home/zuczek/.local/share/radicle-upstream/1bca3646-503b-4240-ad46-ed7c2b1b2b21/store/db\ils, or the id is malformed.
 pub async fn get(
     peer: &net::peer::Peer<BoxedSigner>,
     id: Urn,

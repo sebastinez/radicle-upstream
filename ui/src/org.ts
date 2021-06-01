@@ -7,7 +7,6 @@ import { push } from "svelte-spa-router";
 
 import * as notification from "./notification";
 import * as path from "./path";
-import * as proxy from "./proxy";
 import type * as identity from "./proxy/identity";
 import * as wallet from "./wallet";
 import * as theGraphApi from "./theGraphApi";
@@ -241,20 +240,30 @@ export const fetchMembers = async (
   walletStore: svelteStore.Readable<wallet.Wallet>,
   gnosisSafeAddress: string
 ): Promise<void> => {
+  console.log("FETCH 1");
   const response = await theGraphApi.getGnosisSafeMembers(gnosisSafeAddress);
 
+  console.log("FETCH 2");
+
   const wallet = svelteStore.get(walletStore);
+
+  console.log("FETCH 3");
   const contract = new ClaimsContract(
     wallet.signer,
     claimsAddress(wallet.environment)
   );
 
+  console.log("FETCH 4");
+
   const members = await Promise.all(
     response.members.map(async ethereumAddress => {
+      console.log(`ADDRESS ${  ethereumAddress}`);
       const identity = await getClaimedIdentity(contract, ethereumAddress);
       return { ethereumAddress, identity };
     })
   );
+
+  console.log("FETCH 5");
 
   orgMemberTabStore.set({
     gnosisSafeAddress,
@@ -302,19 +311,26 @@ async function getClaimedIdentity(
   address: string
 ): Promise<identity.RemoteIdentity | undefined> {
   const radicleIdBytes = await contract.getClaimed(address);
+  console.log(`GET CLAIMED IDENTITY 1 ${  address}`);
   if (!radicleIdBytes) {
     return undefined;
   }
+  console.log(`GET CLAIMED IDENTITY 2 ${  address}`);
   const urn = identitySha1Urn(radicleIdBytes);
+  console.log(`GET CLAIMED IDENTITY 3 ${  address}`);
   let identity;
   try {
     identity = await proxy.client.remoteIdentityGet(urn);
-  } catch {
+    console.log(`GET CLAIMED IDENTITY 4 ${  address}`);
+  } catch (e) {
+    console.log(`IDENTITY ERROR ${  e.toString()}`);
     return undefined;
   }
   // Assert that the identity claims the ethereum address
   const claimed = identity.metadata.ethereum?.address.toLowerCase();
+  console.log(`IDENTITY FOR ${  address  }: ${  identity}`);
   if (claimed !== address.toLowerCase()) {
+    console.log(`INVALID CLAIMED ${  claimed  } : ${  address}`);
     return undefined;
   }
   return identity;

@@ -41,7 +41,7 @@ export interface Ethereum {
   expiration: string;
 }
 
-export const remoteIdentitySchema: zod.ZodSchema<RemoteIdentity> = zod.object({
+export const remoteIdentitySchema = zod.object({
   avatarFallback: avatarSchema,
   metadata: zod.object({
     handle: zod.string(),
@@ -55,8 +55,7 @@ export const remoteIdentitySchema: zod.ZodSchema<RemoteIdentity> = zod.object({
   urn: zod.string(),
 });
 
-export const identitySchema: zod.ZodSchema<Identity> =
-  remoteIdentitySchema.extend({
-    peerId: zod.string(),
-    shareableEntityIdentifier: zod.string(),
-  });
+export const identitySchema = remoteIdentitySchema.extend({
+  peerId: zod.string(),
+  shareableEntityIdentifier: zod.string(),
+});

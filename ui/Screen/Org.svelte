@@ -30,8 +30,9 @@
     conditions: [
       async () => {
         try {
-          if ($orgScreenStore) {
-            await org.fetchMembers(store, $orgScreenStore.gnosisSafeAddress);
+          const orgScreen = $orgScreenStore;
+          if (orgScreen) {
+            await org.fetchMembers(store, orgScreen.gnosisSafeAddress);
             return true;
           } else {
             return false;
