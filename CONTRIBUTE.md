@@ -1,6 +1,7 @@
 /* CONTRIBUTE */
 
-This is the contribute.md of our project. Great to have you here. Here are a few ways you can help make this project better!
+This is the contribute.md of our project. Great to have you here. Here are a few
+ways you can help make this project better!
 
 # Contribute.md
 
@@ -41,16 +42,24 @@ This sections explains how bug triaging is done for your project. Help beginners
 
 # Your first bugfix
 
-If you have an issue you know how to fix or see an [open issue][oi] you'd like to fix, we are keen to receive your contributions.
+If you have an issue you know how to fix or see an [open issue][oi] you'd like
+to fix, we are keen to receive your contributions.
 
-We are currently accepting [PR's through GitHub][pr] while we make our own infrastructure more robust. If it's your first time using GitHub Pull Requests, learn more about it [here][ghf].
+We are currently accepting [PR's through GitHub][pr] while we make our own
+infrastructure more robust. If it's your first time using GitHub Pull Requests,
+learn more about it [here][ghf].
 
-We also accept contributions through [Upstream Patches][up], our first version of Pull Request in Upstream. Learn more about the contribution flow [here][cbf].
-For us to see you've contributed a Patch we need to [add your Radicle ID as a remote][ar] to our repo, you can either add it to the [Remotes to track issue][rtr] or email it to [julien@monadic.xyz][mt].
+We also accept contributions through [Upstream Patches][up], our first version
+of Pull Request in Upstream. Learn more about the contribution flow [here][cbf].
+For us to see you've contributed a Patch we need to [add your Radicle ID as a
+remote][ar] to our repo, you can either add it to the [Remotes to track
+issue][rtr] or email it to [julien@monadic.xyz][mt].
 
 # Documentation
 
-We're writing documentation as we are developing new features if you find something that is confusing or not covered at all, feel free to [open a bug][ob] or [contribute][cd]
+We're writing documentation as we are developing new features if you find
+something that is confusing or not covered at all, feel free to [open a bug][ob]
+or [contribute][cd]
 
 
 
