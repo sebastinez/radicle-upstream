@@ -1,10 +1,3 @@
-/* CONTRIBUTE */
-
-This is the `contribute.md` of our project. Great to have you here. Here are a few
-ways you can help make this project better!
-
-# Contribute.md
-
 ## Team members
 
 * [@geigerzaehler][gz]
@@ -40,7 +33,7 @@ This sections explains how bug triaging is done for your project. Help beginners
 * You can update our changelog here:
 * You can remove duplicate bug reports by: -->
 
-# Your first bugfix
+## Your first bugfix
 
 If you have an issue you know how to fix or see an [open issue][oi] you'd like
 to fix, we are keen to receive your contributions.
@@ -55,7 +48,7 @@ For us to see you've contributed a Patch we need to [add your Radicle ID as a
 remote][ar] to our repo, you can either add it to the [Remotes to track
 issue][rtr] or email it to [julien@monadic.xyz][mt].
 
-# Documentation
+## Documentation
 
 We're writing documentation as we are developing new features if you find
 something that is confusing or not covered at all, feel free to [open a bug][ob]
