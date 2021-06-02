@@ -50,7 +50,7 @@ infrastructure more robust. If it's your first time using GitHub Pull Requests,
 learn more about it [here][ghf].
 
 We also accept contributions through [Upstream Patches][up], our first version
-of Pull Request in Upstream. Learn more about the contribution flow [here][cbf].
+of Pull Requests in Upstream. Learn more about the contribution flow [here][cbf].
 For us to see you've contributed a Patch we need to [add your Radicle ID as a
 remote][ar] to our repo, you can either add it to the [Remotes to track
 issue][rtr] or email it to [julien@monadic.xyz][mt].
