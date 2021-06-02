@@ -14,7 +14,7 @@ node [proxy][pr] logic is implemented in [Rust][ru].
 A good entry point for exploration is [`DEVELOPMENT.md`][de], where you'll find
 information on how to build Upstream from source.
 
-If you're looking to contribute, take a look at [`CONTRIBUTE.md`][co] to learn
+If you would like to contribute, take a look at [`CONTRIBUTE.md`][co] to learn
 about the different ways that we accept contributions.
 
 If you have questions or would like to get in touch, check out
