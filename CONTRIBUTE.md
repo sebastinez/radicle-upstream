@@ -14,7 +14,7 @@ ways you can help make this project better!
 
 ## Learn more about Upstream
 
-Looking to get familiar with the Upstream app and the radicle ecosystem:
+Looking to get familiar with the Upstream app and the Radicle ecosystem:
 
 * [DEVELOPMENT.md][dmd]
 * [Discord][dc]
