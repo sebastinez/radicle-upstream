@@ -40,11 +40,11 @@ warp = { version = "0.3", default-features = false }
 
 [dependencies.radicle-daemon]
 git = "https://github.com/radicle-dev/radicle-link.git"
-rev = "d3effebc90501626976cb3dc92d29e858312ea8a"
+rev = "65ac16531f667d2048a2d29f36104777487961aa"
 
 [dependencies.radicle-git-ext]
 git = "https://github.com/radicle-dev/radicle-link.git"
-rev = "d3effebc90501626976cb3dc92d29e858312ea8a"
+rev = "65ac16531f667d2048a2d29f36104777487961aa"
 
 [dependencies.radicle-avatar]
 git = "https://github.com/radicle-dev/radicle-avatar.git"
